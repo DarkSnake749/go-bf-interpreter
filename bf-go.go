@@ -148,6 +148,18 @@ func out(memory_value int) {
 	fmt.Printf("%c", c)
 }
 
+func in(prog Program) Program {
+	new_prog := prog
+
+	var input string
+	fmt.Scan(&input)
+	_byte := int(input[0])
+
+	new_prog.memory[new_prog.memory_pos] = _byte
+
+	return new_prog
+}
+
 func main() {
 	args := os.Args[1:]
 	path := args[0]
@@ -168,7 +180,7 @@ func main() {
 		nextPos(&parser.pos)
 	}
 
-	for eof(prog) {
+	for !eof(prog) {
 		inst := getCurrentInst(prog)
 
 		switch inst {
@@ -196,6 +208,7 @@ func main() {
 			out(getCurrentMemory(prog))
 			break
 		case IN:
+			prog = in(prog)
 			break
 		default:
 			panic("Parsing error")
