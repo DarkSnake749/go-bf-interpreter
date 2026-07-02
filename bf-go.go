@@ -109,6 +109,10 @@ func ptrDecrease(ptr *int) {
 	}
 }
 
+func eof(prog Program) bool {
+	return prog.inst_pos >= len(prog.inst)
+}
+
 func openLoop(prog Program) Program {
 	new_prog := prog
 	if getCurrentMemory(new_prog) != 0 {
@@ -118,7 +122,7 @@ func openLoop(prog Program) Program {
 
 	new_prog.loop_idxs = new_prog.loop_idxs[:len(new_prog.loop_idxs)-1]
 	num_op_loops := 0
-	for getCurrentInst(new_prog) != CL_LOOP {
+	for getCurrentInst(new_prog) != CL_LOOP && !eof(new_prog) {
 		if getCurrentInst(new_prog) == OP_LOOP {
 			num_op_loops += 1
 		}
@@ -164,7 +168,7 @@ func main() {
 		nextPos(&parser.pos)
 	}
 
-	for prog.inst_pos < len(prog.inst) {
+	for eof(prog) {
 		inst := getCurrentInst(prog)
 
 		switch inst {
